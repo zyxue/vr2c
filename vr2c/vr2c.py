@@ -144,9 +144,7 @@ def main():
 
     r2c_bam = pysam.AlignmentFile(r2c_bam_file)
     df_reads = collect_reads(contig, r2c_bam)
-    logging.info('collected {0} reads aligned to for {1} '
-                 '(use --plot-all-reads to plot all reads)'.format(
-                     df_reads.shape[0], contig.query_name))
+    logging.info(f'collected {df_reads.shape[0]} reads aligned to for {contig.query_name}')
 
     output = args.output
     if output is None:

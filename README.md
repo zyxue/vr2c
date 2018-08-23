@@ -15,3 +15,13 @@ load it into a genome browser like
 
 TODO
 
+
+
+### Development
+
+```
+virtualenv venv
+. venv/bin/activate
+
+python setup.py develop
+```
