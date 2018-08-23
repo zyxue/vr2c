@@ -1,8 +1,13 @@
+import logging
+
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa: E402
 
 from vr2c import visaln         # noqa: E402
+
+
+logger = logging.getLogger(__name__)
 
 
 def calc_figure_height(df_reads):

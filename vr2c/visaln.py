@@ -1,3 +1,5 @@
+import logging
+
 import matplotlib.patches as patches
 
 import numpy as np
@@ -5,10 +7,11 @@ import pandas as pd
 
 import vr2c.settings as S
 
-
 """
 Every position should be in the same direction as reference genome
 """
+
+logger = logging.getLogger(__name__)
 
 
 CIGAR_EVENTS_COLOR_DD = {

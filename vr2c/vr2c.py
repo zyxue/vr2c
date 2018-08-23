@@ -1,15 +1,20 @@
 import sys
 import argparse
 import logging
+import random
 
-from tqdm import tqdm
+
 import pandas as pd
+from tqdm import tqdm
 import pysam
 
 from vr2c.plot import plot_alignment
 
+
 logging.basicConfig(
     level=logging.DEBUG, format='%(asctime)s|%(levelname)s|%(message)s')
+
+logger = logging.getLogger(__name__)
 
 
 def get_args():
@@ -66,7 +71,7 @@ def log_contig_info(contig):
             'query_name', 'is_reverse', 'cigarstring',
             'reference_start', 'reference_end',
     ]:
-        logging.info('contig.{0}: {1}'.format(attr, getattr(contig, attr)))
+        logger.info('contig.{0}: {1}'.format(attr, getattr(contig, attr)))
 
 
 def extract_read_info(contig, read):
@@ -102,8 +107,8 @@ def collect_reads(contig, r2c_bam, max_num=100):
         rd_info = extract_read_info(contig, rd)
         reads_info.append(rd_info)
 
-        if len(reads_info) == max_num:
-            break
+    logger.info(f'found {len(reads_info)} reads; randomly pick {max_num}')
+    reads_info = random.choices(reads_info, k=100)
 
     df_reads = pd.DataFrame(
         reads_info, columns=[
@@ -130,21 +135,20 @@ def main():
 
     c2g_bam_file = args.contigs_to_genome
     r2c_bam_file = args.reads_to_contigs
-    logging.info('c2g_bam_file: {0}'.format(c2g_bam_file))
-    logging.info('r2g_bam_file: {0}'.format(r2c_bam_file))
+    logger.info('c2g_bam_file: {0}'.format(c2g_bam_file))
+    logger.info('r2g_bam_file: {0}'.format(r2c_bam_file))
 
     c2g_bam = pysam.AlignmentFile(c2g_bam_file)
 
     contig = fetch_contig(c2g_bam, args.contig_id, args.seqname)
     if contig is None:
-        logging.info(f'The specified contig id: "{args.contig_id}" is NOT found in {args.contigs_to_genome}')
+        logger.info(f'The specified contig id: "{args.contig_id}" is NOT found in {args.contigs_to_genome}')
         sys.exit(1)
 
     log_contig_info(contig)
 
     r2c_bam = pysam.AlignmentFile(r2c_bam_file)
     df_reads = collect_reads(contig, r2c_bam)
-    logging.info(f'collected {df_reads.shape[0]} reads aligned to for {contig.query_name}')
 
     output = args.output
     if output is None:
