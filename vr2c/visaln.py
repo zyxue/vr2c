@@ -3,7 +3,7 @@ import matplotlib.patches as patches
 import numpy as np
 import pandas as pd
 
-import kleat.misc.settings as S
+import vr2c.settings as S
 
 
 """
@@ -138,9 +138,11 @@ def get_abs_end(aln):
 
 def calc_xlim(contig, ith_skip, jth_skip, clvs, padding=None):
     """
-    calculate the proper xlim boundries for the region between nth and nth+1 skip regions
+    calculate the proper xlim boundries for the region between nth and nth+1
+    skip regions
 
     :param padding: pad the beginning and ending around an interested region
+
     """
     assert ith_skip >= 0
     assert jth_skip > ith_skip
